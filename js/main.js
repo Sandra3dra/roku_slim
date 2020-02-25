@@ -34,8 +34,13 @@ import LoginComponent from "./components/LoginComponent.js"
     },
 
     methods: {
-      setAuthenticated(status) {
-        this.authenticated = status;
+      setAuthenticated(status, data) {
+            // this means that the authentication has passed inside login comp
+            // and we have a valid user
+            // so set authenticated property to true, and store the user
+            this.authenticated = status;
+            this.administrator = parseInt(data.isadmin);  //parse to make it number, not text. 1 is true 0 is false
+            this.user = data;
       },
 
       logout() {
@@ -49,4 +54,14 @@ import LoginComponent from "./components/LoginComponent.js"
 
     router: router
   }).$mount("#app");
+
+  router.beforeEach((to, from, next) => {
+      console.log("router guard fire");
+
+      if (vm.authenticated == false) {
+          next("/login");
+      } else {
+          next();
+      }
+  })
 })();
